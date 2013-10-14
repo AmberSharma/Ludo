@@ -1,0 +1,90 @@
+label
+{
+	color:#FFFFFF;
+	font-size:11px;
+	font-family: "Courier New", Courier, mono;
+font-style: normal;
+font-weight: 700;
+}
+table td
+{
+color:#FFFFFF;
+font-size:11px;
+font-family: "Courier New", Courier, mono;
+font-style: normal;
+font-weight: 700;
+padding:10px;
+}
+.total
+{
+height:25%;
+min-width:100px;
+margin-left:15%;
+margin-right:auto;
+}
+.slidepanel
+{
+width:350px;
+height:80%;
+overflow-x: hidden;
+overflow-y: hidden;
+border:1px solid blue;
+}
+.box-wrapper 
+{
+width: 400%;
+height: 100%;
+overflow: hidden;
+
+}
+
+.block
+{
+width:70px;
+height:90%;
+float:left;
+position:relative;
+border:1px solid red;
+left:0px;
+}
+a
+{
+text-decoration:none;
+}
+table
+{
+margin:5px;
+margin-top:1%;
+margin-left:30%;
+width:400px;
+height:50px;
+}
+
+
+#container
+{
+	
+	margin-top:20%;
+	margin-left:17%;
+	height:700px;
+	width:890px;
+}
+#sleft
+{
+	font-size : 30px;
+	color:yellow;
+}
+#sright
+{
+	font-size : 30px;
+	color:yellow;
+}
+html { 
+    background: url(../images/newbackground.jpg) no-repeat; 
+    background-size: 100% 100%;
+    
+}
+center
+{
+	border:1px solid blue;
+}

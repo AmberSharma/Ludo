@@ -1,0 +1,6 @@
+Step 1 : Create a host entry by :
+				sudo vi /etc/hosts
+		 Add a line :
+				192.168.10.20	www.snakeandladder.com
+
+and u are done :)

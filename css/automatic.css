@@ -1,0 +1,125 @@
+
+table td {
+	height: 10%;
+	width: 10%;
+}
+
+#roll {
+	clear: left;
+	float: left;
+	width: 520px;
+	height: 24pt;
+	margin: 40px 0 0 0;
+	font-size: 18pt;
+	font-weight: bold;
+	border-style: outset;
+	background: white;
+}
+.userportion
+{
+	background-image: url(../images/greenbackground.jpg);
+	border-radius:4px;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+	margin:2px;
+	padding:2px;
+}
+#users
+{
+	border:1px solid red;
+	margin-top:100%;
+	width:60%;
+	margin-left:20%;
+}
+.snakeandladder {
+	background-image: url(../images/snakeandladder.jpg);
+	background-position: center;
+	background-size: 102% 102%;
+	background-repeat: no-repeat;
+}
+
+.container {
+	background-image: url(../images/rolldicelogo.gif);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+.bubble {
+	background-color: #FFAB00;
+	border: 2px solid #333;
+	border-radius: 5px;
+	color: #333;
+	display: inline-block;
+	font: 16px/24px sans-serif;
+	padding: 12px 24px;
+	position: relative;
+}
+
+.bubble:after,.bubble:before {
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+	border-top: 20px solid #FFAB00;
+	bottom: -20px;
+	content: '';
+	left: 50%;
+	margin-left: -20px;
+	position: absolute;
+}
+
+/* Styling for second triangle (border) */
+.bubble:before {
+	border-left: 23px solid transparent;
+	border-right: 23px solid transparent;
+	border-top: 23px solid;
+	border-top-color: inherit;
+	/* Can't be included in the shorthand to work */
+	bottom: -23px;
+	margin-left: -23px;
+}
+
+#left
+{
+	height:90%;
+	width:20%;
+	float:left;
+	
+}
+#center
+{
+	height:90%;
+	width:59%;
+	float:left;
+}
+#right
+{
+	height:90%;
+	width:21%;
+	float:right;
+	background-image: url(../images/messagebox.jpg);
+	background-position: center;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}	
+
+#message
+{
+	width:60%;
+	margin-top:20%;
+	margin-left:20%;
+}
+.bottom
+{
+	border:1px solid red;
+	float:left;
+	height:10%;
+	width:100%;
+	font-size: 11pt;
+	padding-top:5px;
+	font-weight: bold;
+	background-image: url(../images/footer.png);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	
+}
