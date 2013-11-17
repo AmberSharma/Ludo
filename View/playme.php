@@ -11,28 +11,32 @@
 
 <script type="text/javascript" src="../js/script.js"></script>
 <script>
+	var chances = new Array();
+    var i = 0; 
+    var message1 = "Its a Six take a turn Again!!!";
+    var turn = 1;
+    var droppedElementArrayIndex = 0;
+    var droppedElementArray = new Array();
+    var position = new Array();
 function dragdrop()
 {
+	
         $( ".draggable2" ).draggable({ revert: "invalid" });
 
         $( ".droppable" ).droppable({
                 activeClass: "ui-state-hover",
                 hoverClass: "ui-state-active",
+                
                 drop: function( event, ui ) {
-                        $( this )
-                                .addClass( "ui-state-highlight" )
-                                .find( "p" )
-                                        .html( "Dropped!" );
+					$( this ).addClass( "ui-state-highlight" ).find( "p" ).html( "Dropped!" );
+					$(this).droppable("disable");
+					droppedElementArray[droppedElementArrayIndex ++] = ui.draggable.attr("id");
                 }
+                
         });
 }
-</script>
 
-<script>
-    var chances = new Array();
-    var i = 0;
-    var message1 = "Its a Six take a turn Again!!!";
-    var turn = 1;
+    
 function animateRoll(times)
 {
     times = times || 1;
@@ -40,6 +44,9 @@ function animateRoll(times)
     drawRoll(roll);
     if (times > 10)
     {
+		droppedElementArrayIndex = 0;
+		droppedElementArray.splice(0, droppedElementArray.length);
+		
         var sum = checkRoll(roll);
         if(sum == 6)
             {
@@ -94,7 +101,6 @@ function checkRoll(die)
 }
 function generateContent()
 {
-    alert(turn);
     var image;
     var j = 1;
     var inside = 0;
@@ -113,42 +119,123 @@ function generateContent()
         }
     if(turn == 4 && inside != 1)
         turn = 1;
-    var data = "<table border='1' cellpadding='10' cellspacing='10'>";
+        var visibleposition = new Array();
+        for(var k =1 ; k < 5 ; k ++)
+        {
+			position[k-1] = $("#"+image+k).closest("td").attr("id");
+			visibleposition[k-1] = isNaN(position[k-1]) ? 0 : position[k-1];	
+			
+		}
+    var data = "<div style='min-width: 200px;float:left'>";
+    data += "<table border='1' cellpadding='10' cellspacing='10'>";
     data += "<tr>";
     data += "<th colspan='2'>Its' Me</th>";
-    data += "<td><img class='draggable2 ui-widget-content' src='../images/"+ image + (j++) +".png' height='30' width='30' /></td>";
-    data += "<td><img class='draggable2 ui-widget-content' src='../images/"+ image + (j++) +".png' height='30' width='30' /></td>";
-    data += "<td><img class='draggable2 ui-widget-content' src='../images/"+ image + (j++) +".png' height='30' width='30' /></td>";
-    data += "<td><img class='draggable2 ui-widget-content' src='../images/"+ image + (j++) +".png' height='30' width='30' /></td>";
+    data += "<td><img id='"+image+"1' class='draggable2 ui-widget-content playerdropped' src='../images/"+ image + (j++) +".png' height='30' width='30' /></td>";
+    data += "<td><img id='"+image+"2' class='draggable2 ui-widget-content playerdropped' src='../images/"+ image + (j++) +".png' height='30' width='30' /></td>";
+    data += "<td><img id='"+image+"3' class='draggable2 ui-widget-content playerdropped' src='../images/"+ image + (j++) +".png' height='30' width='30' /></td>";
+    data += "<td><img id='"+image+"4' class='draggable2 ui-widget-content playerdropped' src='../images/"+ image + (j++) +".png' height='30' width='30' /></td>";
     data += "</tr><tr>";
     data += "<th colspan='2'>Position</th>";
-    data += "<td>0</td>";
-    data += "<td>0</td>";
-    data += "<td>0</td>";
-    data += "<td>0</td>";
+    
+    data += "<td>"+ visibleposition[0] + "</td>";
+    data += "<td>"+ visibleposition[1] + "</td>";
+    data += "<td>"+ visibleposition[2] + "</td>";
+    data += "<td>"+ visibleposition[3] + "</td>";
     data += "</tr>";
     data += "<tr>";
     data += "<th colspan='3' >Points</th>";
     data += "<th colspan='3' >Player</th>";
     data += "</tr>";
     
+    
+    
+    
     for(var k =0 ; k < chances.length;k ++)
         {
             data += "<tr>";
             data += "<td colspan='3'>"+ chances[k] + "</td>";
-            data += "<td colspan='3' class='droppable ui-widget-header' style='border:1px solid red;'>-</td>";
+            data += "<td id='droponme_"+k+"'colspan='3' class='droppable ui-widget-header' style='border:1px solid red;' >-</td>";
             data += "</tr>";
         }
     data += "</table>";
+    data += "</div>";
+    data += "<div style='float:right;width:200px;margin:50px;'>";
+    data += "<a href='javascript:void(0)' onclick='moveplayers(0)'><img src='../images/okdone.png' height='100' width='100'></img></a>"
+    data += "</div>";
     $("#popup_content").html(data);
     dragdrop();
-    chances = new Array();
+    
 }
+function moveplayers(i)
+{
+	if(i < chances.length)
+	{
+		if(droppedElementArray.length == 0)
+		{
+			alert("What was That!!! Plz Choose a player to move" );
+		}
+		/*else if(isNaN(droppedElementArray[i]))
+		{
+			if(chances[i] != 6 || chances[i] != 1)
+			{
+				alert("Wrong Player to Move!!!");
+			}
+		}*/
+		else
+		{
+			//alert(chances);
+			//alert(position);
+			//alert(droppedElementArray.length);
+			//alert(chances.length);
+			if(chances.length == droppedElementArray.length)
+			{
+				$('#toPopup div.close').trigger("click");
+				elementposition = isNaN(position[droppedElementArray[i].charAt(droppedElementArray[i].length-1) - 1]) ? -2 : position[droppedElementArray[i].charAt(droppedElementArray[i].length-1) - 1];
+				setTimeout("moveplayerstepwise("+elementposition+",'"+i+"')", 500);
+				
+				//chances = new Array();
+			}
+		}
+		setTimeout("moveplayers("+(i+1)+")", 5000);
+	}
+	else
+	{
+		$('#toPopup div.close').trigger("click");
+	}
+}
+
+function moveplayerstepwise(elementposition , i)
+{
+	//alert(elementposition);
+	//alert(chances[i]);
+	if(elementposition == -2)
+	{
+		elementposition = droppedElementArray[i].charAt(0) + droppedElementArray[i].charAt(droppedElementArray[i].length -1);
+	}
+	//alert(elementposition);
+	if(elementposition < chances[i] || isNaN(elementposition))
+	{
+		$("#"+elementposition).html("&nbsp;");
+		if(isNaN(elementposition))
+			elementposition = 0;
+		else
+			elementposition += 1;
+		$("#"+elementposition).html("<img src='../images/"+droppedElementArray[i]+"' height='20' width='20'/>");
+		setTimeout("moveplayerstepwise("+elementposition+",'"+i+"')", 500);
+	}
+	else
+	{
+		chances = new Array();
+	}
+}
+
 </script>
 <style>
 body
 {
-	
+	background-image:url('../images/background1.jpg') ;
+	background-repeat:no-repeat;
+	background-size:100% 100%;
 	border: 1px solid red;
 }
 #left
@@ -175,6 +262,14 @@ body
 	float:left;
 	border: 1px solid red;
 }
+table.fixedtable
+{ 
+	table-layout:fixed; 
+}
+table.fixedtable td 
+{ 
+	overflow: hidden; 
+}
 </style>
 </head>
 <body>
@@ -189,75 +284,75 @@ body
 </div>
 	
 <div id="center">
-<table border="1" width="95%" height="95%" cellpadding="0" cellspacing="0" style="text-align: center; white-space: normal;margin:2%;margin-left:2.3%;margin-top:1.8%;">
+<table border="1" width="95%" height="95%" cellpadding="0" cellspacing="0" style="text-align: center; white-space: normal;margin:2%;margin-left:2.3%;margin-top:1.8%;" class="fixedtable">
 <tr>
 	<td rowspan="6" colspan="6">
-	<table border="1" style="text-align: center;margin:8%;margin-left:25%;" width="50%" height="50%" cellpadding="0" cellspacing="0">
+	<table border="1" style="text-align: center;margin:8%;margin-left:25%;" width="50%" height="50%" cellpadding="0" cellspacing="0" class="fixedtable">
 		<tr>
 			<td>
 			</td>
 			<td id="g1">
-				<a href="javascript:void(0);" ><img src="../images/green1.png" height="30" width="30" /></a>
+				<a href="javascript:void(0);" ><img src="../images/green1.png" height="30" width="30" id="green1"/></a>
 			</td>
 			<td>
 			</td>
 		</tr>
 		<tr>
 			<td id="g2">
-				<img src="../images/green2.png" height="30" width="30" />
+				<img src="../images/green2.png" height="30" width="30" id="green2"/>
 			</td>
 			<td>
 			</td>
 			<td id="g3">
-				<img src="../images/green3.png" height="30" width="30" />
+				<img src="../images/green3.png" height="30" width="30" id="green3"/>
 			</td>
 		</tr>
 		<tr>
 			<td>
 			</td>
 			<td id="g4">
-				<img src="../images/green4.png" height="30" width="30" />
+				<img src="../images/green4.png" height="30" width="30" id="green4"/>
 			</td>
 			<td>
 			</td>
 		</tr>
 	</table>
 	</td>
-	<td id="<?php echo '10,49,36,23';?>">
+	<td id="<?php echo '10';?>">
 	ab
 	</td>
-	<td id="<?php echo '11,50,37,24';?>">
+	<td id="<?php echo '11';?>">
 	ab
 	</td>
-	<td id="<?php echo '12,-1,38,25';?>">
+	<td id="<?php echo '12';?>">
 	ab
 	</td>
 	<td rowspan="6" colspan="6">
-	<table border="1" style="text-align: center;margin:8%;margin-left:25%;" width="50%" height="50%" cellpadding="0" cellspacing="0">
+	<table border="1" style="text-align: center;margin:8%;margin-left:25%;" width="50%" height="50%" cellpadding="0" cellspacing="0" class="fixedtable">
 		<tr>
 			<td>
 			</td>
 			<td id="r1">
-				<img src="../images/red1.png" height="30" width="30" />
+				<img src="../images/red1.png" height="30" width="30" id="red1"/>
 			</td>
 			<td>
 			</td>
 		</tr>
 		<tr>
 			<td id="r2">
-				<img src="../images/red2.png" height="30" width="30" />
+				<img src="../images/red2.png" height="30" width="30" id="red2"/>
 			</td>
 			<td>
 			</td>
 			<td id="r3">
-				<img src="../images/red3.png" height="30" width="30" />
+				<img src="../images/red3.png" height="30" width="30" id="red3"/>
 			</td>
 		</tr>
 		<tr>
 			<td>
 			</td>
 			<td id="r4">
-				<img src="../images/red4.png" height="30" width="30" />
+				<img src="../images/red4.png" height="30" width="30" id="red4"/>
 			</td>
 			<td>
 			</td>
@@ -266,71 +361,71 @@ body
 	</td>
 </tr>
 <?php
-$g = 9 ;$r = 48 ;$b = 35 ;$y = 22;$k =0;$m = 2;
+$g = 9 ;$r = 48 ;$m = 2;
 for($i = 0 ; $i < 5 ; $i ++)
 {
 ?>
 <tr>
-	<td id="<?php echo $g . ',' . $r . ',' . $b . ',' . $y ; ?>">
+	<td id="<?php echo $g ; ?>">
 	ab
 	</td>
 	<td id="<?php echo 'r' . ($r + (2 * $m) - 1); ?>">
 	ab
 	</td>
-	<td id="<?php echo ($g + ($m * 2)). ',' . $k . ',' . ($b + ($m * 2)) . ',' . ($y + ($m * 2)); ?>">
+	<td id="<?php echo ($g + ($m * 2)); ?>">
 
 	
 	ab
 	</td>
 </tr>
 <?php
-$k ++ ; $g -- ; $r --;$y --; $b --;$m ++;
+$g -- ; $r --;$m ++;
 }
 ?>
 <tr>
 <?php
-$g = -1;$r = 38;$y = 12;$b = 25;
+$g = -1;
 for($i = 0 ; $i < 6 ; $i ++)
 {
 ?>
 
-	<td id="<?php echo $g . ',' . $r . ',' . $b . ',' . $y ; ?>">
+	<td id="<?php echo $g ; ?>">
 	ab
 	</td>
 
 <?php
-$g ++;$r ++;$y ++;$b ++;
+$g ++;
 }
 ?>
 <td rowspan="3" colspan="3">
 ab
 </td>
 <?php
-$g = 18;$r = 5;$y = 31;$b = 44;
+$g = 18;
 for($i = 0 ; $i < 6 ; $i ++)
 {
 ?>
 
-	<td id="<?php echo $g . ',' . $r . ',' . $b . ',' . $y ; ?>">
+	<td id="<?php echo $g; ?>">
 	ab
 	</td>
 	
 
 <?php
-$g ++;$r ++;$y ++;$b ++;
+$g ++;
 }
 ?>
 </tr>
 <tr>
 <?php
-$g = 50;$r = 37;$y = 11;$b = 24;
+$g = 50;
 for($i = 0 ; $i < 6 ; $i ++)
 {
 	if($i == 0)
 	{
 ?>
 
-	<td id="<?php echo $g . ',' . $r . ',' . $b . ',' . $y ; ?>">
+	<td id="<?php echo $g; ?>">
 <?php
 	}
 	else
@@ -349,14 +444,14 @@ $g ++;
 }
 ?>
 <?php
-$g = 24;$r = 11;$y = 37;$b = 55;
+$g = 24;$b = 55;
 for($i = 0 ; $i < 6 ; $i ++)
 {
 	if($i == 5)
 	{
 ?>
 
-	<td id="<?php echo $g . ',' . $r . ',' . $b . ',' . $y ; ?>">
+	<td id="<?php echo $g; ?>">
 <?php
 	}
 	else
@@ -377,28 +472,28 @@ $b --;
 </tr>
 <tr>
 <?php
-$g = 49;$r = 36;$y = 10;$b = 23;
+$g = 49;
 for($i = 0 ; $i < 6 ; $i ++)
 {
 ?>
 
-	<td id="<?php echo $g . ',' . $r . ',' . $b . ',' . $y ; ?>">
+	<td id="<?php echo $g; ?>">
 	ab
 	</td>
 	
 
 <?php
-$g --; $r --; $y --; $b --;
+$g --;
 }
 ?>
 <?php
-$g = 30;$r = 17;$y = 43;$b = 4;
+$g = 30;
 for($i = 0 ; $i < 6 ; $i ++)
 {
 ?>
 
 
-	<td id="<?php echo $g . ',' . $r . ',' . $b . ',' . $y ; ?>">
+	<td id="<?php echo $g; ?>">
 
 	
 	ab
@@ -406,78 +501,78 @@ for($i = 0 ; $i < 6 ; $i ++)
 	
 
 <?php
-$g --; $r --; $y --; $b --;
+$g --;
 }
 ?>
 </tr>
 <tr>
 	<td rowspan="6" colspan="6">
-	<table border="1" style="text-align: center;margin:8%;margin-left:25%;" width="50%" height="50%" cellpadding="0" cellspacing="0">
+	<table border="1" style="text-align: center;margin:8%;margin-left:25%;" width="50%" height="50%" cellpadding="0" cellspacing="0" class="fixedtable">
 		<tr>
 			<td>
 			</td>
 			<td id="y1">
-				<img src="../images/yellow1.png" height="30" width="30" />
+				<img src="../images/yellow1.png" height="30" width="30" id="yellow1"/>
 			</td>
 			<td>
 			</td>
 		</tr>
 		<tr>
 			<td id="y2">
-				<img src="../images/yellow2.png" height="30" width="30" />
+				<img src="../images/yellow2.png" height="30" width="30" id="yellow2"/>
 			</td>
 			<td>
 			</td>
 			<td id="y3">
-				<img src="../images/yellow3.png" height="30" width="30" />
+				<img src="../images/yellow3.png" height="30" width="30" id="yellow3"/>
 			</td>
 		</tr>
 		<tr>
 			<td>
 			</td>
 			<td id="y4">
-				<img src="../images/yellow4.png" height="30" width="30" />
+				<img src="../images/yellow4.png" height="30" width="30" id="yellow4"/>
 			</td>
 			<td>
 			</td>
 		</tr>
 	</table>
 	</td>
-	<td id="<?php echo '43,30,17,4';?>">
+	<td id="<?php echo '43';?>">
 	ab
 	</td>
 	<td id="<?php echo 'y55';?>">
 	ab
 	</td>
-	<td id="<?php echo '31,18,5,44';?>">
+	<td id="<?php echo '31';?>">
 	ab
 	</td>
 	<td rowspan="6" colspan="6">
-	<table border="1" style="text-align: center;margin:8%;margin-left:25%;" width="50%" height="50%" cellpadding="0" cellspacing="0">
+	<table border="1" style="text-align: center;margin:8%;margin-left:25%;" width="50%" height="50%" cellpadding="0" cellspacing="0" class="fixedtable">
 		<tr>
 			<td>
 			</td>
 			<td id="b1">
-				<img src="../images/blue1.png" height="30" width="30" />
+				<img src="../images/blue1.png" height="30" width="30" id="blue1"/>
 			</td>
 			<td>
 			</td>
 		</tr>
 		<tr>
 			<td id="b2">
-				<img src="../images/blue2.png" height="30" width="30" />
+				<img src="../images/blue2.png" height="30" width="30" id="blue2"/>
 			</td>
 			<td>
 			</td>
 			<td id="b3">
-				<img src="../images/blue3.png" height="30" width="30" />
+				<img src="../images/blue3.png" height="30" width="30" id="blue3"/>
 			</td>
 		</tr>
 		<tr>
 			<td>
 			</td>
 			<td id="b4">
-				<img src="../images/blue4.png" height="30" width="30" />
+				<img src="../images/blue4.png" height="30" width="30" id="blue4"/>
 			</td>
 			<td>
 			</td>
@@ -486,12 +581,12 @@ $g --; $r --; $y --; $b --;
 	</td>
 </tr>
 <?php
-$g = 42 ;$r = 29 ;$b = 16 ;$y = 3;$k =45;$m = 5;$n =54;
+$g = 42 ;$m = 5;$n =54;
 for($i = 0 ; $i < 5 ; $i ++)
 {
 ?>
 <tr>
-	<td id="<?php echo $g . ',' . $r . ',' . $b . ',' . $y ; ?>">
+	<td id="<?php echo $g; ?>">
 	ab
 	</td>
 <?php
@@ -504,18 +599,18 @@ if($i != 4)
 else
 {
 ?>
-	<td id="<?php echo ($g -1) . ',' . ($r - 1) . ',' . ($b - 1). ',' . $n ; ?>">	
+	<td id="<?php echo ($g -1); ?>">	
 <?php
 }
 ?>
 	ab
 	</td>
-	<td id="<?php echo ($g - ($m * 2)). ',' . ($r - ($m * 2)) . ',' . ($b - ($m * 2)) . ',' . $k; ?>">
+	<td id="<?php echo ($g - ($m * 2)); ?>">
 	ab
 	</td>
 </tr>
 <?php
-$k ++ ; $g -- ; $r --;$y --; $b --;$m --;$n --;
+$g -- ;$m --;$n --;
 }
 ?>
 </table>
