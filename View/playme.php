@@ -18,6 +18,7 @@
     var droppedElementArrayIndex = 0;
     var droppedElementArray = new Array();
     var position = new Array();
+    var visibleposition = new Array();
 function dragdrop()
 {
 	
@@ -28,9 +29,39 @@ function dragdrop()
                 hoverClass: "ui-state-active",
                 
                 drop: function( event, ui ) {
-					$( this ).addClass( "ui-state-highlight" ).find( "p" ).html( "Dropped!" );
-					$(this).droppable("disable");
-					droppedElementArray[droppedElementArrayIndex ++] = ui.draggable.attr("id");
+					
+					dicevalue = (chances[$( this ).attr('id').charAt(($( this ).attr('id')).length -1)]);
+					presentposition = (visibleposition[$(ui.draggable).attr("id").charAt($(ui.draggable).attr("id").length -1) - 1]);
+					//alert($(ui.draggable).attr("id"));
+					alert(presentposition);
+					if(presentposition == 0)
+					{
+						alert(dicevalue);
+						if(dicevalue != 6 && dicevalue != 1)
+						{
+							//self.location.reload();
+							$('#toPopup div.close').trigger("click");
+							alert("Wrong Move Buddy!!!!");
+							turn -=1;
+							generateContent();
+							$("a.topopup").click();
+							
+							//$((ui.draggable).attr("id")).draggable({ revert: true });
+							return false;
+						}
+						else
+						{
+							$( this ).addClass( "ui-state-highlight" ).find( "p" ).html( "Dropped!" );
+							$(this).droppable("disable");
+							droppedElementArray[droppedElementArrayIndex ++] = ui.draggable.attr("id");
+						}
+					}
+					else
+					{
+						$( this ).addClass( "ui-state-highlight" ).find( "p" ).html( "Dropped!" );
+						$(this).droppable("disable");
+						droppedElementArray[droppedElementArrayIndex ++] = ui.draggable.attr("id");
+					}
                 }
                 
         });
@@ -119,7 +150,7 @@ function generateContent()
         }
     if(turn == 4 && inside != 1)
         turn = 1;
-        var visibleposition = new Array();
+        
         for(var k =1 ; k < 5 ; k ++)
         {
 			position[k-1] = $("#"+image+k).closest("td").attr("id");
@@ -220,7 +251,7 @@ function moveplayerstepwise(elementposition , i)
 			elementposition = 0;
 		else
 			elementposition += 1;
-		$("#"+elementposition).html("<img src='../images/"+droppedElementArray[i]+"' height='20' width='20'/>");
+		$("#"+elementposition).html("<img src='../images/"+droppedElementArray[i]+"' height='20' width='20' id='"+droppedElementArray[i]+"' />");
 		setTimeout("moveplayerstepwise("+elementposition+",'"+i+"')", 500);
 	}
 	else
